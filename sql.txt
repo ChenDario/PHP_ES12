@@ -1,3 +1,4 @@
+ES3 index
 WITH NumeroPitture AS (
 	SELECT A.id_artista AS id, COUNT(O.id_opera) AS NumeroPitture
 	FROM Artista A
@@ -15,7 +16,73 @@ NumeroSculture AS (
 	GROUP BY A.id_artista 
 )
 
-SELECT A.nome_artista AS Nome, A.cognome_artista AS Cognome, NP.NumeroPitture, NS.NumeroSculture
+SELECT A.nome_artista AS Nome, A.cognome_artista AS Cognome, COALESCE(NP.NumeroPitture, 0) AS NumeroPitture, COALESCE(NS.NumeroSculture, 0) AS NumeroSculture
 FROM Artista A
 LEFT JOIN NumeroPitture NP ON NP.id = A.id_artista
 LEFT OUTER JOIN NumeroSculture NS ON NS.id = A.id_artista
+
+ES3 Opere
+SELECT A.nome_artista AS Nome, A.cognome_artista AS Cognome, O.nome_opera, O.data_opera, O.tipo_opera AS Tipo
+FROM Artista A
+INNER JOIN Opera O ON O.id_artista = A.id_artista
+WHERE A.id_artista = ?
+	AND YEAR(O.data_opera) BETWEEN 1970 AND 1980
+
+
+DB:
+
+DROP DATABASE IF EXISTS Museo;
+CREATE DATABASE Museo; 
+USE Museo;
+
+CREATE TABLE artista (
+id_artista INT NOT NULL PRIMARY KEY auto_increment,
+cognome_artista VARCHAR(25) NOT NULL,
+nome_artista VARCHAR(30) NOT NULL,
+anno_nascita_artista VARCHAR(4) NOT NULL
+);
+CREATE TABLE opera (
+id_opera INT NOT NULL PRIMARY KEY auto_increment,
+nome_opera VARCHAR(35) NOT NULL,
+tipo_opera VARCHAR(50) NOT NULL,
+id_artista INT NOT NULL REFERENCES artista(id_artista)
+);
+
+INSERT INTO `opera` (`id_opera`, `nome_opera`, `tipo_opera`, `id_artista`) VALUES
+(1, 'Mare', 'Pittura', 1),
+(2, 'Montagna blu', 'Scultura', 0),
+(3, 'Tramonto', 'Scultura', 3),
+(4, 'Alba', 'Pittura', 4),
+(5, 'Statua uomo', 'Scultura', 1),
+(6, 'Statua uomo 2', 'Scultura', 1),
+(7, 'Quadro bello', 'Pittura', 2),
+(8, 'Quadro montagna', 'Pittura', 2),
+(9, 'Aurora', 'Pittura', 3),
+(10, 'Firenze', 'Pittura', 5),
+(11, 'Roma', 'Pittura', 5),
+(12, 'Napoli', 'Pittura', 5);
+INSERT INTO `artista` (`id_artista`, `cognome_artista`, `nome_artista`,
+`anno_nascita_artista`) VALUES
+(1, 'Rossi', 'Mario', '1980'),
+(2, 'Verdi', 'Carlo', '1978'),
+(3, 'Arancino', 'Giulia', '1977'),
+(4, 'Giolitti', 'Bruna', '1976'),
+(5, 'Maradona', 'Franco', '1990'),
+(6, 'Benigni', 'Mario', '1991');
+
+ALTER TABLE Opera ADD data_opera DATE;
+
+UPDATE Opera SET data_opera = "1975-03-13" WHERE id_opera = 1;
+UPDATE Opera SET data_opera = "1998-04-24" WHERE id_opera = 2;
+UPDATE Opera SET data_opera = "1972-06-15" WHERE id_opera = 3;
+UPDATE Opera SET data_opera = "1974-09-28" WHERE id_opera = 4;
+UPDATE Opera SET data_opera = "1976-12-05" WHERE id_opera = 5;
+UPDATE Opera SET data_opera = "1978-04-20" WHERE id_opera = 6;
+UPDATE Opera SET data_opera = "1979-11-11" WHERE id_opera = 7;
+UPDATE Opera SET data_opera = "1980-08-30" WHERE id_opera = 8;
+UPDATE Opera SET data_opera = "1999-12-31" WHERE id_opera = 9;
+UPDATE Opera SET data_opera = "1984-10-29" WHERE id_opera = 10;
+UPDATE Opera SET data_opera = "1963-06-15" WHERE id_opera = 11;
+UPDATE Opera SET data_opera = "2020-07-18" WHERE id_opera = 12;
+UPDATE Opera SET data_opera = "2013-10-25" WHERE id_opera = 13;
+UPDATE Opera SET data_opera = "2005-04-29" WHERE id_opera = 14;

@@ -7,21 +7,23 @@
     $result = $stmt->get_result();
 
     if (isset($_SESSION['error_message'])) {
-        echo "<script>alert('".$_SESSION['error_message']."');</script>";
-        unset($_SESSION['error_message']); // Pulisce il messaggio dopo che è stato visualizzato
+        echo "<div class='alert'>".$_SESSION['error_message']."</div>";
+        unset($_SESSION['error_message']);
     }
 
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Link CSS-->
+    <link rel="stylesheet" href="style.css">
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title> PHP_ES12 Es1 </title>
 </head>
 <body>
-    <div>
+    <div class="container">
         <h2> Opere Artista</h2>
         <form action="opere.php" method="POST">
             <label for="nome">Nome Artista</label>
