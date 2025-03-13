@@ -1,0 +1,21 @@
+WITH NumeroPitture AS (
+	SELECT A.id_artista AS id, COUNT(O.id_opera) AS NumeroPitture
+	FROM Artista A
+	INNER JOIN Opera O ON O.id_artista = A.id_artista
+	WHERE O.tipo_opera = 'Pittura' 
+		AND (YEAR(O.data_opera) BETWEEN 1970 AND 1980)
+	GROUP BY A.id_artista 
+), 
+NumeroSculture AS (
+	SELECT A.id_artista AS id, COUNT(O.id_opera) AS NumeroSculture
+	FROM Artista A
+	INNER JOIN Opera O ON O.id_artista = A.id_artista
+	WHERE O.tipo_opera = 'Scultura' 
+		AND (YEAR(O.data_opera) BETWEEN 1970 AND 1980)
+	GROUP BY A.id_artista 
+)
+
+SELECT A.nome_artista AS Nome, A.cognome_artista AS Cognome, NP.NumeroPitture, NS.NumeroSculture
+FROM Artista A
+LEFT JOIN NumeroPitture NP ON NP.id = A.id_artista
+LEFT OUTER JOIN NumeroSculture NS ON NS.id = A.id_artista
